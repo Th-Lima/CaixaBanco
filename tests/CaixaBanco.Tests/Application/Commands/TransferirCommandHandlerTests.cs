@@ -65,17 +65,14 @@ namespace CaixaBanco.Tests.Application.Commands
             Assert.NotNull(resultado);
             Assert.IsType<TransferenciaResponse>(resultado);
 
-            // Verificações de Saldo no objeto (Handler executou Debitar/Creditar)
             Assert.Equal(saldoInicial - valorTransferencia, contaOrigem.Saldo);
             Assert.Equal(saldoInicial + valorTransferencia, contaDestino.Saldo);
 
-            // Verificação do Mapeamento
             Assert.Equal(valorTransferencia, resultado.ValorTransacao);
             Assert.Equal(950.00m, resultado.ValorContaOrigemAtualizado);
             Assert.Equal(1050.00m, resultado.ValorContaDestinoAtualizado);
             Assert.Equal(dataTransacao, resultado.CriadoEm);
 
-            // Verificação de Mocks
             _transacaoRepositoryMock.Verify(r => r.ProcessarTransferenciaAsync(
                 It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>()), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.IsAny<Notificacao>()), Times.Never);
@@ -93,7 +90,7 @@ namespace CaixaBanco.Tests.Application.Commands
             var command = new TransferirCommand
             {
                 DocumentoOrigem = documento,
-                DocumentoDestino = documento, // Iguais, mesmo com espaços
+                DocumentoDestino = documento,
                 Valor = 10.00m
             };
 
@@ -267,7 +264,6 @@ namespace CaixaBanco.Tests.Application.Commands
             _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync(contaOrigem);
             _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync(contaDestino);
 
-            // Simula uma exceção no processamento
             _transacaoRepositoryMock
                 .Setup(r => r.ProcessarTransferenciaAsync(
                     It.IsAny<Conta>(), It.IsAny<Conta>(), valorTransferencia))
@@ -279,7 +275,6 @@ namespace CaixaBanco.Tests.Application.Commands
             // Assert
             Assert.Null(resultado);
 
-            // Verifica notificação de erro
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem.Contains($"Erro ao processar transferência: {mensagemErro}"))), Times.Once);
         }
