@@ -1,6 +1,7 @@
 ﻿using CaixaBanco.Application.Commands.Contas.CriarConta;
 using CaixaBanco.Application.Commands.Contas.InativarConta;
 using CaixaBanco.Application.Queries.Contas.ObterConta;
+using CaixaBanco.Application.Responses.Contas;
 using CaixaBanco.Domain.Notification;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +22,13 @@ namespace CaixaBanco.Api.Controllers
         /// Endpoint para criar conta bancária
         /// </summary>
         /// <param name="criarContacommand"></param>
+        /// <response code="200">Retorna booleano de acordo com o sucesso da operação de criar conta.</response>
+        /// <response code="400">Se ocorrer um erro na criação da conta</response>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Criar([FromBody] CriarContaCommand criarContacommand)
         {
             if (!ModelState.IsValid) 
@@ -40,6 +46,9 @@ namespace CaixaBanco.Api.Controllers
         /// <param name="documento"></param>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ContaResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Obter([FromQuery] string? nome, [FromQuery] string? documento)
         {
             var obterContaQuery = new ObterContaQuery
@@ -59,6 +68,9 @@ namespace CaixaBanco.Api.Controllers
         /// <param name="inativarContaCommand"></param>
         /// <returns></returns>
         [HttpPatch("/inativar")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Inativar([FromBody] InativarContaCommand inativarContaCommand)
         {
             if (!ModelState.IsValid)

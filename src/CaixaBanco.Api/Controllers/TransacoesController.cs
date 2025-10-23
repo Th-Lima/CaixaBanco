@@ -1,4 +1,5 @@
 ﻿using CaixaBanco.Application.Commands.Transacoes.Transferir;
+using CaixaBanco.Application.Responses.Transacoes;
 using CaixaBanco.Domain.Notification;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,9 @@ namespace CaixaBanco.Api.Controllers
         /// <param name="transferirCommand"></param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(typeof(TransferenciaResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> Transferir([FromBody] TransferirCommand transferirCommand)
         {
             if (!ModelState.IsValid) 
