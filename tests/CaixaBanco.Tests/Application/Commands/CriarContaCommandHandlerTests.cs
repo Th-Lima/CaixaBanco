@@ -80,7 +80,6 @@ namespace CaixaBanco.Tests.Application.Commands
             var command = new CriarContaCommand { Nome = nome, Documento = documento };
             var contaExistente = new Conta(nome, documento);
 
-            // Simula que a conta *já* existe no repositório
             _contaRepositoryMock
                 .Setup(r => r.ObterContaAsync(documento))
                 .ReturnsAsync(contaExistente);

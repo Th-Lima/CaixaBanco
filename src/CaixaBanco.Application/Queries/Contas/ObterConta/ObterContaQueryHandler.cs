@@ -5,7 +5,7 @@ using MediatR;
 
 namespace CaixaBanco.Application.Queries.Contas.ObterConta
 {
-    public class ObterContaQueryHandler : IRequestHandler<ObterContaQuery, ContaResponse?>
+    public class ObterContaQueryHandler : IRequestHandler<ObterContaQuery, IEnumerable<ContaResponse>>
     {
         private readonly IContaRepository _contaRepository;
         private readonly INotificador _notificador;
@@ -16,26 +16,24 @@ namespace CaixaBanco.Application.Queries.Contas.ObterConta
             _notificador = notificador;
         }
 
-        public async Task<ContaResponse?> Handle(ObterContaQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ContaResponse>> Handle(ObterContaQuery request, CancellationToken cancellationToken)
         {
             var contas = await _contaRepository.ObterContasAsync(request.Nome, request.Documento);
 
-            var queryReponse = contas.FirstOrDefault();
-
-            if (queryReponse != null)
+            if(contas !!= null && contas.Any())
             {
-                return new ContaResponse
+                return contas.Select(c => new ContaResponse
                 {
-                    Nome = queryReponse.Nome ?? string.Empty,
-                    Documento = queryReponse.Documento ?? string.Empty,
-                    Saldo = queryReponse.Saldo,
-                    DataAbertura = queryReponse.DataAbertura,
-                    Status = queryReponse.Status
-                };
+                    Nome = c.Nome ?? string.Empty,
+                    Documento = c.Documento ?? string.Empty,
+                    Saldo = c.Saldo,
+                    DataAbertura = c.DataAbertura,
+                    Status = c.Status
+                }).ToList();
             }
 
             _notificador.Disparar(new Notificacao("Não foi encontrada nenhuma conta para este documento ou nome"));
-            return null;
+            return Enumerable.Empty<ContaResponse>();
         }
     }
 }

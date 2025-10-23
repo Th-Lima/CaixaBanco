@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CaixaBanco.Application.Queries.Contas.ObterConta
 {
-    public class ObterContaQuery : IRequest<ContaResponse?>
+    public class ObterContaQuery : IRequest<IEnumerable<ContaResponse>>
     {
         public string Nome { get; set; } = string.Empty;
         public string Documento { get; set; } = string.Empty;

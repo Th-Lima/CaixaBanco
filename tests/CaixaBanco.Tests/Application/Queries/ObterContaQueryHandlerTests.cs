@@ -43,13 +43,13 @@ namespace CaixaBanco.Tests.Application.Queries
 
             // Assert
             Assert.NotNull(resultado);
-            Assert.IsType<ContaResponse>(resultado);
+            Assert.IsType<List<ContaResponse>>(resultado);
 
-            Assert.Equal("João da Silva", resultado.Nome);
-            Assert.Equal("12345678900", resultado.Documento);
-            Assert.Equal(1000.00m, resultado.Saldo);
-            Assert.Equal(dataAbertura, resultado.DataAbertura);
-            Assert.Equal(StatusConta.Ativa, resultado.Status);
+            Assert.Equal("João da Silva", resultado.FirstOrDefault()?.Nome);
+            Assert.Equal("12345678900", resultado.FirstOrDefault()?.Documento);
+            Assert.Equal(1000.00m, resultado.FirstOrDefault()?.Saldo);
+            Assert.Equal(dataAbertura, resultado.FirstOrDefault()?.DataAbertura);
+            Assert.Equal(StatusConta.Ativa, resultado.FirstOrDefault()?.Status);
 
             _contaRepositoryMock.Verify(r => r.ObterContasAsync(query.Nome, query.Documento), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.IsAny<Notificacao>()), Times.Never);
@@ -70,7 +70,7 @@ namespace CaixaBanco.Tests.Application.Queries
             var resultado = await _handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Null(resultado);
+            Assert.Empty(resultado);
 
             _contaRepositoryMock.Verify(r => r.ObterContasAsync(query.Nome, query.Documento), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
@@ -96,10 +96,10 @@ namespace CaixaBanco.Tests.Application.Queries
 
             // Assert
             Assert.NotNull(resultado);
-            Assert.Equal(conta1.Nome, resultado.Nome);
-            Assert.Equal(conta1.Documento, resultado.Documento);
-            Assert.Equal(1000m, resultado.Saldo);
-            Assert.Equal(StatusConta.Ativa, resultado.Status);
+            Assert.Equal(conta1.Nome, resultado.FirstOrDefault()?.Nome);
+            Assert.Equal(conta1.Documento, resultado.FirstOrDefault()?.Documento);
+            Assert.Equal(1000m, resultado.FirstOrDefault()?.Saldo);
+            Assert.Equal(StatusConta.Ativa, resultado.FirstOrDefault()?.Status);
 
             _notificadorMock.Verify(n => n.Disparar(It.IsAny<Notificacao>()), Times.Never);
         }

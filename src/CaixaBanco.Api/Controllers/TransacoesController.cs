@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CaixaBanco.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class TransacoesController : MainController
     {
         private readonly IMediator _mediator;
