@@ -8,7 +8,7 @@ namespace CaixaBanco.Data.Mappings
     {
         public void Configure(EntityTypeBuilder<InativacaoConta> builder)
         {
-            builder.ToTable("LogsInativacaoContas");
+            builder.ToTable("InativacaoContas");
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Documento)

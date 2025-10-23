@@ -10,7 +10,6 @@ namespace CaixaBanco.Domain.Entities
         public decimal Saldo { get; private set; }
         public DateTime DataAbertura { get; private set; }
         public StatusConta Status { get; private set; }
-        public byte[]? VersaoLinha { get; private set; }
 
         public ICollection<Transacao> Transacoes { get; private set; } = new List<Transacao>();
 

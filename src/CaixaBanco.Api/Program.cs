@@ -1,7 +1,5 @@
 using CaixaBanco.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,41 +7,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 var app = builder.Build();
 
+// Ensure the database is created
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    try
-    {
-        var context = services.GetRequiredService<ApplicationDbContext>();
-
-        if (context.Database.GetPendingMigrations().Any())
-        {
-            logger.LogInformation("Aplicando migrations pendentes ao banco de dados...");
-            context.Database.Migrate();
-            logger.LogInformation("Migrations aplicadas com sucesso.");
-        }
-        else
-        {
-            if (!context.Database.CanConnect() || !context.Database.GetService<IRelationalDatabaseCreator>().Exists())
-            {
-                logger.LogInformation("Criando banco de dados a partir do modelo (EnsureCreated)...");
-                context.Database.EnsureCreated();
-                logger.LogInformation("Banco criado com EnsureCreated.");
-            }
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Erro ao inicializar o banco de dados.");
-        throw;
-    }
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.EnsureCreated();
 }
+
 
 if (app.Environment.IsDevelopment())
 {
