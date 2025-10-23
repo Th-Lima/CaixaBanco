@@ -2,10 +2,10 @@
 {
     public interface INotificador
     {
-        bool HasNotification();
+        bool TemNotificacoes();
 
-        List<Notificacao> GetNotifications();
+        List<Notificacao> ObterNotificacoes();
 
-        void Handle(Notificacao notification);
+        void Disparar(Notificacao notification);
     }
 }

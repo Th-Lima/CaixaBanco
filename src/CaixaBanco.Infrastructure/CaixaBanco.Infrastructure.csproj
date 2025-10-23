@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CaixaBanco.Data\CaixaBanco.Data.csproj" />
+    <ProjectReference Include="..\CaixaBanco.Domain\CaixaBanco.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

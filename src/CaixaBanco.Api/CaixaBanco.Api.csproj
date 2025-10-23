@@ -19,11 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\CaixaBanco.Application\CaixaBanco.Application.csproj" />
     <ProjectReference Include="..\CaixaBanco.Data\CaixaBanco.Data.csproj" />
+    <ProjectReference Include="..\CaixaBanco.Domain\CaixaBanco.Domain.csproj" />
+    <ProjectReference Include="..\CaixaBanco.Infrastructure\CaixaBanco.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,5 @@
+using CaixaBanco.Api.Configuration;
+using CaixaBanco.Application.Commands.Contas.CriarConta;
 using CaixaBanco.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,11 @@ builder.Services.AddSwaggerGen();
 //Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.ResolveDependencias();
+
+//MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(CriarContaCommand).Assembly));
 
 
 var app = builder.Build();
