@@ -20,7 +20,7 @@ namespace CaixaBanco.Domain.Entities
             Id = Guid.NewGuid();
             Nome = nome ?? throw new ArgumentNullException(nameof(nome));
             Documento = documento ?? throw new ArgumentNullException(nameof(documento));
-            Saldo = 1000m; // Saldo inicial
+            Saldo = 1000m;
             DataAbertura = DateTime.UtcNow.Date;
             Status = StatusConta.Ativa;
         }

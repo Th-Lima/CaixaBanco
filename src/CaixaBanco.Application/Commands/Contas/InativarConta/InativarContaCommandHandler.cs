@@ -36,7 +36,7 @@ namespace CaixaBanco.Application.Commands.Contas.InativarConta
 
             var usuario = string.IsNullOrWhiteSpace(inativarContaCommand.UsuarioResponsavel) 
                 ? "system" 
-                : inativarContaCommand.UsuarioResponsavel.Trim();
+                : inativarContaCommand.UsuarioResponsavel;
 
             var registro = new InativacaoConta(conta.Documento, usuario);
 

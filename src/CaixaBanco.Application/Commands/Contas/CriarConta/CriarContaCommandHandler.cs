@@ -20,7 +20,7 @@ namespace CaixaBanco.Application.Commands.Contas.CriarConta
         {
             var documento = command.Documento?.Trim();
 
-            if (documento == null && string.IsNullOrWhiteSpace(command.Nome))
+            if (string.IsNullOrWhiteSpace(documento) || string.IsNullOrWhiteSpace(command.Nome))
             {
                 _notificador.Disparar(new Notificacao("Documento e Nome precisam ser enviados para criação da conta"));
                 return false;
