@@ -10,7 +10,7 @@ Para rodar o projeto e a API localmente, siga os passos abaixo:
     ```bash
     docker-compose up
     ```
-   __Isso fará com o SQL Server seja criado.__
+   __Isso fará com que o SQL Server seja criado.__
    
    Exemplo Container rodando:
 
