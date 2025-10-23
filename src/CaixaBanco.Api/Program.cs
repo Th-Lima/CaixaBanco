@@ -21,7 +21,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Cri
 
 var app = builder.Build();
 
-// Ensure the database is created
+// Cria o banco de dados
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
