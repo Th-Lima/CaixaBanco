@@ -35,6 +35,7 @@ namespace CaixaBanco.Application.Commands.Contas.CriarConta
             else
             {
                 var conta = new Conta(command.Nome, documento!);
+               
                 var resultado = await _contaRepository.CriarContaAsync(conta);
                 return resultado;
             }

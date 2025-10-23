@@ -20,7 +20,7 @@
             ContaDestinoId = contaDestinoId;
             Valor = valor;
             Descricao = descricao;
-            CriadoEm = DateTime.UtcNow;
+            CriadoEm = DateTime.UtcNow.Date;
         }
     }
 }

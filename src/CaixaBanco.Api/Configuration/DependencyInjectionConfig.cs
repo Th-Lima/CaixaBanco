@@ -13,6 +13,7 @@ namespace CaixaBanco.Api.Configuration
 
             //Repositories
             services.AddScoped<IContaRepository, ContaRepository>();
+            services.AddScoped<ITransacaoRepository, TransacaoRepository>();
 
             //Notificador
             services.AddScoped<INotificador, Notificador>();

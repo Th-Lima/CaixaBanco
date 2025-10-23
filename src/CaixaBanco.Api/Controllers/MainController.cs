@@ -22,7 +22,7 @@ namespace CaixaBanco.Api.Controllers
             return !_notificador.TemNotificacoes();
         }
 
-        protected ActionResult ResponseCustomizado(object resultado = null)
+        protected ActionResult ResponseCustomizado(object? resultado = null)
         {
             if (ValidaOperacao())
                 return Ok(new
