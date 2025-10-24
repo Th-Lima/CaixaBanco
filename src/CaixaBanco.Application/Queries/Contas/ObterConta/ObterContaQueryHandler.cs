@@ -18,7 +18,7 @@ namespace CaixaBanco.Application.Queries.Contas.ObterConta
 
         public async Task<IEnumerable<ContaResponse>> Handle(ObterContaQuery request, CancellationToken cancellationToken)
         {
-            var contas = await _contaRepository.ObterContasAsync(request.Nome, request.Documento);
+            var contas = await _contaRepository.ObterContasAsync(request.Nome, request.Documento, cancellationToken);
 
             if(contas != null && contas.Any())
             {

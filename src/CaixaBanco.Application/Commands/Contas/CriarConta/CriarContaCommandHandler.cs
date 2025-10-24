@@ -16,7 +16,7 @@ namespace CaixaBanco.Application.Commands.Contas.CriarConta
             _notificador = notificador;
         }
 
-        public async Task<bool> Handle(CriarContaCommand command)
+        public async Task<bool> Handle(CriarContaCommand command, CancellationToken cancellationToken)
         {
             var documento = command.Documento?.Trim();
 
@@ -26,7 +26,7 @@ namespace CaixaBanco.Application.Commands.Contas.CriarConta
                 return false;
             }
 
-            var contaDb = await _contaRepository.ObterContaAsync(documento!);
+            var contaDb = await _contaRepository.ObterContaAsync(documento!, cancellationToken);
             if (contaDb != null)
             {
                 _notificador.Disparar(new Notificacao("Já existe uma conta cadastrada para este documento."));
@@ -36,7 +36,7 @@ namespace CaixaBanco.Application.Commands.Contas.CriarConta
             {
                 var conta = new Conta(command.Nome, documento!);
                
-                var resultado = await _contaRepository.CriarContaAsync(conta);
+                var resultado = await _contaRepository.CriarContaAsync(conta, cancellationToken);
                 return resultado;
             }
         }

@@ -22,19 +22,17 @@ namespace CaixaBanco.Api.Controllers
         /// Endpoint para criar conta bancária
         /// </summary>
         /// <param name="criarContacommand"></param>
-        /// <response code="200">Retorna booleano de acordo com o sucesso da operação de criar conta.</response>
-        /// <response code="400">Se ocorrer um erro na criação da conta</response>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Criar([FromBody] CriarContaCommand criarContacommand)
+        public async Task<ActionResult> Criar([FromBody] CriarContaCommand criarContacommand, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) 
                 return ResponseCustomizado(ModelState);
                 
-            var resultado =  await _mediator.Send(criarContacommand);
+            var resultado =  await _mediator.Send(criarContacommand, cancellationToken);
 
             return ResponseCustomizado(resultado);
         }
@@ -49,7 +47,7 @@ namespace CaixaBanco.Api.Controllers
         [ProducesResponseType(typeof(IEnumerable<ContaResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Obter([FromQuery] string? nome, [FromQuery] string? documento)
+        public async Task<ActionResult> Obter([FromQuery] string? nome, [FromQuery] string? documento, CancellationToken cancellationToken)
         {
             var obterContaQuery = new ObterContaQuery
             {
@@ -57,7 +55,7 @@ namespace CaixaBanco.Api.Controllers
                 Documento = documento ?? string.Empty
             };
 
-            var resultado = await _mediator.Send(obterContaQuery);
+            var resultado = await _mediator.Send(obterContaQuery, cancellationToken);
 
             return ResponseCustomizado(resultado);
         }
@@ -71,7 +69,7 @@ namespace CaixaBanco.Api.Controllers
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Inativar([FromBody] InativarContaCommand inativarContaCommand)
+        public async Task<ActionResult> Inativar([FromBody] InativarContaCommand inativarContaCommand, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
                 return ResponseCustomizado(ModelState);
@@ -82,7 +80,7 @@ namespace CaixaBanco.Api.Controllers
                 return ResponseCustomizado();
             }
 
-            var resultado = await _mediator.Send(inativarContaCommand);
+            var resultado = await _mediator.Send(inativarContaCommand, cancellationToken);
             return ResponseCustomizado(resultado);
         }
     }

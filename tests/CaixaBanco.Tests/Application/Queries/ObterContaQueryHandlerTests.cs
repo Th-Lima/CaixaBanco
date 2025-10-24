@@ -35,7 +35,7 @@ namespace CaixaBanco.Tests.Application.Queries
             var query = new ObterContaQuery { Nome = "João", Documento = "12345678900" };
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContasAsync(query.Nome, query.Documento))
+                .Setup(r => r.ObterContasAsync(query.Nome, query.Documento, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(contasEncontradas);
 
             // Act
@@ -51,7 +51,7 @@ namespace CaixaBanco.Tests.Application.Queries
             Assert.Equal(dataAbertura, resultado.FirstOrDefault()?.DataAbertura);
             Assert.Equal(StatusConta.Ativa, resultado.FirstOrDefault()?.Status);
 
-            _contaRepositoryMock.Verify(r => r.ObterContasAsync(query.Nome, query.Documento), Times.Once);
+            _contaRepositoryMock.Verify(r => r.ObterContasAsync(query.Nome, query.Documento, It.IsAny<CancellationToken>()), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.IsAny<Notificacao>()), Times.Never);
         }
 
@@ -63,7 +63,7 @@ namespace CaixaBanco.Tests.Application.Queries
             var query = new ObterContaQuery { Nome = "Inexistente", Documento = "000" };
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContasAsync(query.Nome, query.Documento))
+                .Setup(r => r.ObterContasAsync(query.Nome, query.Documento, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(contasVazias);
 
             // Act
@@ -72,7 +72,7 @@ namespace CaixaBanco.Tests.Application.Queries
             // Assert
             Assert.Empty(resultado);
 
-            _contaRepositoryMock.Verify(r => r.ObterContasAsync(query.Nome, query.Documento), Times.Once);
+            _contaRepositoryMock.Verify(r => r.ObterContasAsync(query.Nome, query.Documento, It.IsAny<CancellationToken>()), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Não foi encontrada nenhuma conta para este documento ou nome")), Times.Once);
         }
@@ -88,7 +88,7 @@ namespace CaixaBanco.Tests.Application.Queries
             var query = new ObterContaQuery { Nome = "Otav" };
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContasAsync(query.Nome, query.Documento))
+                .Setup(r => r.ObterContasAsync(query.Nome, query.Documento, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(contasMultiplas);
 
             // Act

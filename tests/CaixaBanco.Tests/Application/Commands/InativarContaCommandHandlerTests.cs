@@ -33,11 +33,11 @@ namespace CaixaBanco.Tests.Application.Commands
             var command = new InativarContaCommand { Documento = documento, UsuarioResponsavel = "João" };
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContaAsync(documento))
+                .Setup(r => r.ObterContaAsync(documento, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(contaAtiva);
 
             _contaRepositoryMock
-                .Setup(r => r.InativarContaAsync(It.IsAny<InativacaoConta>()))
+                .Setup(r => r.InativarContaAsync(It.IsAny<InativacaoConta>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             // Act
@@ -47,9 +47,9 @@ namespace CaixaBanco.Tests.Application.Commands
             Assert.True(resultado);
             Assert.Equal(StatusConta.Inativa, contaAtiva.Status);
 
-            _contaRepositoryMock.Verify(r => r.ObterContaAsync(documento), Times.Once);
+            _contaRepositoryMock.Verify(r => r.ObterContaAsync(documento, It.IsAny<CancellationToken>()), Times.Once);
             _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.Is<InativacaoConta>(
-                reg => reg.Documento == documento && reg.UsuarioResponsavel == command.UsuarioResponsavel)), Times.Once);
+                x => x.Documento == documento && x.UsuarioResponsavel == command.UsuarioResponsavel), It.IsAny<CancellationToken>()), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.IsAny<Notificacao>()), Times.Never);
         }
 
@@ -62,7 +62,7 @@ namespace CaixaBanco.Tests.Application.Commands
             var command = new InativarContaCommand { Documento = documentoNoComando, UsuarioResponsavel = "João" };
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContaAsync(documentoEsperado))
+                .Setup(r => r.ObterContaAsync(documentoEsperado, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Conta)null!); 
 
             // Act
@@ -71,8 +71,8 @@ namespace CaixaBanco.Tests.Application.Commands
             // Assert
             Assert.False(resultado);
 
-            _contaRepositoryMock.Verify(r => r.ObterContaAsync(documentoEsperado), Times.Once);
-            _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.IsAny<InativacaoConta>()), Times.Never);
+            _contaRepositoryMock.Verify(r => r.ObterContaAsync(documentoEsperado, It.IsAny<CancellationToken>()), Times.Once);
+            _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.IsAny<InativacaoConta>(), It.IsAny<CancellationToken>()), Times.Never);
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Conta não encontrada.")), Times.Once);
         }
@@ -91,7 +91,7 @@ namespace CaixaBanco.Tests.Application.Commands
             conta.Inativar();
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContaAsync(documento))
+                .Setup(r => r.ObterContaAsync(documento, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(conta);
 
             // Act
@@ -101,8 +101,8 @@ namespace CaixaBanco.Tests.Application.Commands
             Assert.False(resultado);
             Assert.Equal(statusInicial, conta.Status); 
 
-            _contaRepositoryMock.Verify(r => r.ObterContaAsync(documento), Times.Once);
-            _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.IsAny<InativacaoConta>()), Times.Never);
+            _contaRepositoryMock.Verify(r => r.ObterContaAsync(documento, It.IsAny<CancellationToken>()), Times.Once);
+            _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.IsAny<InativacaoConta>(), It.IsAny<CancellationToken>()), Times.Never);
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Conta já está inativa.")), Times.Once);
         }
@@ -117,11 +117,11 @@ namespace CaixaBanco.Tests.Application.Commands
             var command = new InativarContaCommand { Documento = documento, UsuarioResponsavel = "admin" };
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContaAsync(documento))
+                .Setup(r => r.ObterContaAsync(documento, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(contaAtiva);
 
             _contaRepositoryMock
-                .Setup(r => r.InativarContaAsync(It.IsAny<InativacaoConta>()))
+                .Setup(r => r.InativarContaAsync(It.IsAny<InativacaoConta>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
             // Act
@@ -131,7 +131,7 @@ namespace CaixaBanco.Tests.Application.Commands
             Assert.False(resultado);
             Assert.Equal(StatusConta.Inativa, contaAtiva.Status); 
 
-            _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.IsAny<InativacaoConta>()), Times.Once);
+            _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.IsAny<InativacaoConta>(), It.IsAny<CancellationToken>()), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.IsAny<Notificacao>()), Times.Never);
         }
 
@@ -150,11 +150,11 @@ namespace CaixaBanco.Tests.Application.Commands
             const string usuarioEsperado = "system";
 
             _contaRepositoryMock
-                .Setup(r => r.ObterContaAsync(documento))
+                .Setup(r => r.ObterContaAsync(documento, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(contaAtiva);
 
             _contaRepositoryMock
-                .Setup(r => r.InativarContaAsync(It.IsAny<InativacaoConta>()))
+                .Setup(r => r.InativarContaAsync(It.IsAny<InativacaoConta>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             // Act
@@ -163,7 +163,7 @@ namespace CaixaBanco.Tests.Application.Commands
             // Assert
             Assert.True(resultado);
             _contaRepositoryMock.Verify(r => r.InativarContaAsync(It.Is<InativacaoConta>(
-                reg => reg.UsuarioResponsavel == usuarioEsperado)), Times.Once);
+                reg => reg.UsuarioResponsavel == usuarioEsperado), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

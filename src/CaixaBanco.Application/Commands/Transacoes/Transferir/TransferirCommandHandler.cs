@@ -33,8 +33,8 @@ namespace CaixaBanco.Application.Commands.Transacoes.Transferir
                 return null;
             }
 
-            var origem = await _contaRepository.ObterContaAsync(docOrigem);
-            var destino = await _contaRepository.ObterContaAsync(docDestino);
+            var origem = await _contaRepository.ObterContaAsync(docOrigem, cancellationToken);
+            var destino = await _contaRepository.ObterContaAsync(docDestino, cancellationToken);
 
             if(!ValidacaoContas(request, origem, destino))
                 return null;
@@ -46,7 +46,7 @@ namespace CaixaBanco.Application.Commands.Transacoes.Transferir
             Transacao? transacao = null;
             try
             {
-                transacao = await _transacaoRepository.ProcessarTransferenciaAsync(origem!, destino!, request.Valor);
+                transacao = await _transacaoRepository.ProcessarTransferenciaAsync(origem!, destino!, request.Valor, cancellationToken);
 
                 if (transacao != null)
                 {

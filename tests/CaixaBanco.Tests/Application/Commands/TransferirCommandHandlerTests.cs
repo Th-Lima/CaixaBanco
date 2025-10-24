@@ -51,11 +51,11 @@ namespace CaixaBanco.Tests.Application.Commands
             var dataTransacao = DateTime.UtcNow.Date;
             var transacaoSalva = new Transacao(contaOrigem.Id, contaDestino.Id, valorTransferencia);
 
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync(docOrigem)).ReturnsAsync(contaOrigem);
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync(docDestino)).ReturnsAsync(contaDestino);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync(docOrigem, It.IsAny<CancellationToken>())).ReturnsAsync(contaOrigem);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync(docDestino, It.IsAny<CancellationToken>())).ReturnsAsync(contaDestino);
             _transacaoRepositoryMock
                 .Setup(r => r.ProcessarTransferenciaAsync(
-                    It.IsAny<Conta>(), It.IsAny<Conta>(), valorTransferencia))
+                    It.IsAny<Conta>(), It.IsAny<Conta>(), valorTransferencia, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(transacaoSalva);
 
             // Act
@@ -74,7 +74,7 @@ namespace CaixaBanco.Tests.Application.Commands
             Assert.Equal(dataTransacao, resultado.CriadoEm);
 
             _transacaoRepositoryMock.Verify(r => r.ProcessarTransferenciaAsync(
-                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>()), Times.Once);
+                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>(), It.IsAny<CancellationToken>()), Times.Once);
             _notificadorMock.Verify(n => n.Disparar(It.IsAny<Notificacao>()), Times.Never);
         }
 
@@ -99,7 +99,7 @@ namespace CaixaBanco.Tests.Application.Commands
 
             // Assert
             Assert.Null(resultado);
-            _contaRepositoryMock.Verify(r => r.ObterContaAsync(It.IsAny<string>()), Times.Never);
+            _contaRepositoryMock.Verify(r => r.ObterContaAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Conta de origem e destino não podem ser a mesma.")), Times.Once);
         }
@@ -113,8 +113,8 @@ namespace CaixaBanco.Tests.Application.Commands
         {
             // Arrange
             var command = new TransferirCommand { DocumentoOrigem = "111", DocumentoDestino = "222", Valor = 10.00m };
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync((Conta)null!);
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync(new Conta("Lucas", "222"));
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111", It.IsAny<CancellationToken>())).ReturnsAsync((Conta)null!);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222", It.IsAny<CancellationToken>())).ReturnsAsync(new Conta("Lucas", "222"));
 
             // Act
             var resultado = await _handler.Handle(command, CancellationToken.None);
@@ -124,7 +124,7 @@ namespace CaixaBanco.Tests.Application.Commands
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Conta de origem não encontrada.")), Times.Once);
             _transacaoRepositoryMock.Verify(r => r.ProcessarTransferenciaAsync(
-                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>()), Times.Never);
+                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Fact(DisplayName = "Validação: Conta de destino não encontrada")]
@@ -132,8 +132,8 @@ namespace CaixaBanco.Tests.Application.Commands
         {
             // Arrange
             var command = new TransferirCommand { DocumentoOrigem = "111", DocumentoDestino = "222", Valor = 10.00m };
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync(new Conta("José", "111"));
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync((Conta)null!);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111", It.IsAny<CancellationToken>())).ReturnsAsync(new Conta("José", "111"));
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222", It.IsAny<CancellationToken>())).ReturnsAsync((Conta)null!);
 
             // Act
             var resultado = await _handler.Handle(command, CancellationToken.None);
@@ -143,7 +143,7 @@ namespace CaixaBanco.Tests.Application.Commands
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Conta de destino não encontrada.")), Times.Once);
             _transacaoRepositoryMock.Verify(r => r.ProcessarTransferenciaAsync(
-                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>()), Times.Never);
+                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         #endregion
@@ -160,8 +160,8 @@ namespace CaixaBanco.Tests.Application.Commands
 
             origem.Inativar();
 
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync(origem);
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync(destino);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111", It.IsAny<CancellationToken>())).ReturnsAsync(origem);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222", It.IsAny<CancellationToken>())).ReturnsAsync(destino);
 
             // Act
             var resultado = await _handler.Handle(command, CancellationToken.None);
@@ -171,7 +171,7 @@ namespace CaixaBanco.Tests.Application.Commands
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Ambas as contas devem estar ativas.")), Times.Once);
             _transacaoRepositoryMock.Verify(r => r.ProcessarTransferenciaAsync(
-                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>()), Times.Never);
+                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory(DisplayName = "Validação: Valor de transferência não positivo")]
@@ -184,8 +184,8 @@ namespace CaixaBanco.Tests.Application.Commands
             var origem = new Conta("Thales", "111");
             var destino = new Conta("Maria", "222");
 
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync(origem);
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync(destino);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111", It.IsAny<CancellationToken>())).ReturnsAsync(origem);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222", It.IsAny<CancellationToken>())).ReturnsAsync(destino);
 
             // Act
             var resultado = await _handler.Handle(command, CancellationToken.None);
@@ -195,7 +195,7 @@ namespace CaixaBanco.Tests.Application.Commands
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Valor da transferência deve ser positivo.")), Times.Once);
             _transacaoRepositoryMock.Verify(r => r.ProcessarTransferenciaAsync(
-                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>()), Times.Never);
+                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Fact(DisplayName = "Validação: Saldo insuficiente na conta de origem")]
@@ -207,8 +207,8 @@ namespace CaixaBanco.Tests.Application.Commands
             var origem = new Conta("José", "111");
             var destino = new Conta("Joana", "222");
 
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync(origem);
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync(destino);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111", It.IsAny<CancellationToken>())).ReturnsAsync(origem);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222", It.IsAny<CancellationToken>())).ReturnsAsync(destino);
 
             // Act
             var resultado = await _handler.Handle(command, CancellationToken.None);
@@ -218,7 +218,7 @@ namespace CaixaBanco.Tests.Application.Commands
             _notificadorMock.Verify(n => n.Disparar(It.Is<Notificacao>(
                 not => not.Mensagem == "Saldo insuficiente na conta de origem.")), Times.Once);
             _transacaoRepositoryMock.Verify(r => r.ProcessarTransferenciaAsync(
-                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>()), Times.Never);
+                It.IsAny<Conta>(), It.IsAny<Conta>(), It.IsAny<decimal>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         #endregion
@@ -234,12 +234,12 @@ namespace CaixaBanco.Tests.Application.Commands
             var contaDestino = new Conta("Ricardo", "222");
             var command = new TransferirCommand { DocumentoOrigem = "111", DocumentoDestino = "222", Valor = valorTransferencia };
 
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync(contaOrigem);
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync(contaDestino);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111", It.IsAny<CancellationToken>())).ReturnsAsync(contaOrigem);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222", It.IsAny<CancellationToken>())).ReturnsAsync(contaDestino);
 
             _transacaoRepositoryMock
                 .Setup(r => r.ProcessarTransferenciaAsync(
-                    It.IsAny<Conta>(), It.IsAny<Conta>(), valorTransferencia))
+                    It.IsAny<Conta>(), It.IsAny<Conta>(), valorTransferencia, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Transacao?)null);
 
             // Act
@@ -261,12 +261,12 @@ namespace CaixaBanco.Tests.Application.Commands
             var command = new TransferirCommand { DocumentoOrigem = "111", DocumentoDestino = "222", Valor = valorTransferencia };
             var mensagemErro = "Database connection error.";
 
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111")).ReturnsAsync(contaOrigem);
-            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222")).ReturnsAsync(contaDestino);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("111", It.IsAny<CancellationToken>())).ReturnsAsync(contaOrigem);
+            _contaRepositoryMock.Setup(r => r.ObterContaAsync("222", It.IsAny<CancellationToken>())).ReturnsAsync(contaDestino);
 
             _transacaoRepositoryMock
                 .Setup(r => r.ProcessarTransferenciaAsync(
-                    It.IsAny<Conta>(), It.IsAny<Conta>(), valorTransferencia))
+                    It.IsAny<Conta>(), It.IsAny<Conta>(), valorTransferencia, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new InvalidOperationException(mensagemErro));
 
             // Act

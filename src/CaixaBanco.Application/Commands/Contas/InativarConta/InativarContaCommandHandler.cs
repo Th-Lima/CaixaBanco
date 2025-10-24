@@ -17,9 +17,9 @@ namespace CaixaBanco.Application.Commands.Contas.InativarConta
             _notificador = notificador;
         }
 
-        public async Task<bool> Handle(InativarContaCommand inativarContaCommand)
+        public async Task<bool> Handle(InativarContaCommand inativarContaCommand, CancellationToken cancellationToken)
         {
-            var conta = await _contaRepository.ObterContaAsync(inativarContaCommand.Documento!.Trim());
+            var conta = await _contaRepository.ObterContaAsync(inativarContaCommand.Documento!.Trim(), cancellationToken);
             if (conta == null)
             {
                 _notificador.Disparar(new Notificacao("Conta não encontrada."));
@@ -40,7 +40,7 @@ namespace CaixaBanco.Application.Commands.Contas.InativarConta
 
             var registro = new InativacaoConta(conta.Documento, usuario);
 
-            return await _contaRepository.InativarContaAsync(registro);
+            return await _contaRepository.InativarContaAsync(registro, cancellationToken);
         }
     }
 }

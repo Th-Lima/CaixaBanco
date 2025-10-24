@@ -25,7 +25,7 @@ namespace CaixaBanco.Api.Controllers
         [ProducesResponseType(typeof(TransferenciaResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Transferir([FromBody] TransferirCommand transferirCommand)
+        public async Task<ActionResult> Transferir([FromBody] TransferirCommand transferirCommand, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) 
                 return ResponseCustomizado(ModelState);
@@ -35,7 +35,7 @@ namespace CaixaBanco.Api.Controllers
                 DocumentoOrigem = transferirCommand.DocumentoOrigem,
                 DocumentoDestino = transferirCommand.DocumentoDestino,
                 Valor = transferirCommand.Valor
-            });
+            }, cancellationToken);
 
             return ResponseCustomizado(resultado);
         }

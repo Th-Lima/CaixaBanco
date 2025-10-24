@@ -4,6 +4,6 @@ namespace CaixaBanco.Domain.Repositories
 {
     public interface ITransacaoRepository
     {
-        Task<Transacao?> ProcessarTransferenciaAsync(Conta origem, Conta destino, decimal valor);
+        Task<Transacao?> ProcessarTransferenciaAsync(Conta origem, Conta destino, decimal valor, CancellationToken cancellationToken);
     }
 }

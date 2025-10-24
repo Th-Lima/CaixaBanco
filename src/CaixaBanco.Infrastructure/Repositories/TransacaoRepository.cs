@@ -14,7 +14,7 @@ namespace CaixaBanco.Infrastructure.Repositories
         }
 
         
-        public async Task<Transacao?> ProcessarTransferenciaAsync(Conta origem, Conta destino, decimal valor)
+        public async Task<Transacao?> ProcessarTransferenciaAsync(Conta origem, Conta destino, decimal valor, CancellationToken cancellationToken)
         {
             using var tx = await _db.Database.BeginTransactionAsync();
             try
@@ -25,14 +25,14 @@ namespace CaixaBanco.Infrastructure.Repositories
                 _db.Contas.Update(origem);
                 _db.Contas.Update(destino);
 
-                await _db.SaveChangesAsync();
-                await tx.CommitAsync();
+                await _db.SaveChangesAsync(cancellationToken);
+                await tx.CommitAsync(cancellationToken);
 
                 return transacao;
             }
             catch (Exception)
             {
-                await tx.RollbackAsync();
+                await tx.RollbackAsync(cancellationToken);
                 throw;
             }
         }
