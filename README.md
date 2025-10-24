@@ -19,8 +19,8 @@ Para rodar o projeto e a API localmente, siga os passos abaixo:
 
 ### 2. Executar a Solução do Projeto
 
-1.  Após o SQL Server estar em execução, abra a solução do projeto no **Visual Studio**.
-2.  Rode a solução (você pode executá-la através do **IIS Express**).
+1.  Após o SQL Server estar em execução no container docker, abra a solução do projeto no **Visual Studio**.
+2.  Rode a solução.
 
     __Isso fará com que a Api seja executada em localhost com o swagger, para tornar possível a utilização dos endpoints e também criará o banco de dados no SQLServer (banco de dados **DbCaixaBanco**).__
 
