@@ -16,7 +16,7 @@ namespace CaixaBanco.Application.Commands.Contas.CriarConta
             _notificador = notificador;
         }
 
-        public async Task<bool> Handle(CriarContaCommand command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CriarContaCommand command)
         {
             var documento = command.Documento?.Trim();
 
