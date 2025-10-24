@@ -17,7 +17,7 @@ namespace CaixaBanco.Application.Commands.Contas.InativarConta
             _notificador = notificador;
         }
 
-        public async Task<bool> Handle(InativarContaCommand inativarContaCommand, CancellationToken cancellationToken)
+        public async Task<bool> Handle(InativarContaCommand inativarContaCommand)
         {
             var conta = await _contaRepository.ObterContaAsync(inativarContaCommand.Documento!.Trim());
             if (conta == null)
