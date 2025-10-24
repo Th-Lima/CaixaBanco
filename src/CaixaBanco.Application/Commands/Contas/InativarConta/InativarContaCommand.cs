@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CaixaBanco.Application.Commands.Contas.InativarConta
 {
+    /// <summary>
+    /// Comando para inativação de conta
+    /// </summary>
     public class InativarContaCommand : IRequest<bool>
     {
         [Required]

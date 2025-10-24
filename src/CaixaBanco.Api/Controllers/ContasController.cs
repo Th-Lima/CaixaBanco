@@ -8,11 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CaixaBanco.Api.Controllers
 {
+    /// <summary>
+    /// Controlller para gerenciar ações das contas bancárias
+    /// </summary>
     [Route("[controller]")]
     public class ContasController : MainController
     {
         private readonly IMediator _mediator;
 
+        /// <summary>
+        /// Construtor da classe ContasController para injeção de dependências e inicialização.
+        /// </summary>
+        /// <param name="notificador"></param>
+        /// <param name="mediator"></param>
         public ContasController(INotificador notificador, IMediator mediator) : base(notificador)
         {
             _mediator = mediator;
@@ -21,7 +29,7 @@ namespace CaixaBanco.Api.Controllers
         /// <summary>
         /// Endpoint para criar conta bancária
         /// </summary>
-        /// <param name="criarContacommand"></param>
+        /// <param name="criarContacommand">Payload que deverá ser enviado para criação da conta.</param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
@@ -40,8 +48,8 @@ namespace CaixaBanco.Api.Controllers
         /// <summary>
         /// Endpoint para obter conta bancária por nome ou documento
         /// </summary>
-        /// <param name="nome"></param>
-        /// <param name="documento"></param>
+        /// <param name="nome">Parametro string 'nome' para obter a conta.</param>
+        /// <param name="documento">Parametro string 'documento' para obter a conta.</param>
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ContaResponse>), StatusCodes.Status200OK)]
@@ -63,7 +71,7 @@ namespace CaixaBanco.Api.Controllers
         /// <summary>
         /// Endpoint para inativar conta bancária
         /// </summary>
-        /// <param name="inativarContaCommand"></param>
+        /// <param name="inativarContaCommand">Payload a ser enviado para inativar uma conta</param>
         /// <returns></returns>
         [HttpPatch("/inativar")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]

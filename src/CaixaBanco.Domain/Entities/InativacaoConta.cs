@@ -1,5 +1,8 @@
 ﻿namespace CaixaBanco.Domain.Entities
 {
+    /// <summary>
+    /// Classe que representa a inativação de uma conta como entidade do domínio
+    /// </summary>
     public class InativacaoConta
     {
         public Guid Id { get; private set; }

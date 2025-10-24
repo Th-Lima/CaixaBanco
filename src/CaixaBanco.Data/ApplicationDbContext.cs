@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace CaixaBanco.Data
 {
+    /// <summary>
+    /// Classe de contexto do banco de dados para o Entity Framework Core
+    /// </summary>
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }

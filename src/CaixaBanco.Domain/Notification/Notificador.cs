@@ -1,5 +1,8 @@
 ﻿namespace CaixaBanco.Domain.Notification
 {
+    /// <summary>
+    /// Classe responsável por gerenciar notificações de erros e mensagens
+    /// </summary>
     public class Notificador : INotificador
     {
         private readonly List<Notificacao> _notificacoes;

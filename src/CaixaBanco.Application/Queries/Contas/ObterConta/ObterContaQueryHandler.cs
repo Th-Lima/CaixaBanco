@@ -5,6 +5,9 @@ using MediatR;
 
 namespace CaixaBanco.Application.Queries.Contas.ObterConta
 {
+    /// <summary>
+    /// Classe handler para a query de obtenção de conta
+    /// </summary>
     public class ObterContaQueryHandler : IRequestHandler<ObterContaQuery, IEnumerable<ContaResponse>>
     {
         private readonly IContaRepository _contaRepository;
@@ -16,6 +19,12 @@ namespace CaixaBanco.Application.Queries.Contas.ObterConta
             _notificador = notificador;
         }
 
+        /// <summary>
+        /// Método handler para manipular a query de obtenção de conta e suas regras de negócio
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<ContaResponse>> Handle(ObterContaQuery request, CancellationToken cancellationToken)
         {
             var contas = await _contaRepository.ObterContasAsync(request.Nome, request.Documento, cancellationToken);

@@ -5,6 +5,9 @@ using MediatR;
 
 namespace CaixaBanco.Application.Commands.Contas.CriarConta
 {
+    /// <summary>
+    /// Classe handler para o comando de criação de conta
+    /// </summary>
     public class CriarContaCommandHandler : IRequestHandler<CriarContaCommand, bool>
     {
         private readonly IContaRepository _contaRepository;
@@ -16,6 +19,12 @@ namespace CaixaBanco.Application.Commands.Contas.CriarConta
             _notificador = notificador;
         }
 
+        /// <summary>
+        /// Método para manipular o comando de criação de conta e suas regras de negócio
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<bool> Handle(CriarContaCommand command, CancellationToken cancellationToken)
         {
             var documento = command.Documento?.Trim();

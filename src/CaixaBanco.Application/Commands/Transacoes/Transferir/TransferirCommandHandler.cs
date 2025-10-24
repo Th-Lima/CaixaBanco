@@ -7,6 +7,9 @@ using MediatR;
 
 namespace CaixaBanco.Application.Commands.Transacoes.Transferir
 {
+    /// <summary>
+    /// Classe handler para o comando de transferência entre contas
+    /// </summary>
     public class TransferirCommandHandler : IRequestHandler<TransferirCommand, TransferenciaResponse?>
     {
         private readonly ITransacaoRepository _transacaoRepository;
@@ -22,6 +25,12 @@ namespace CaixaBanco.Application.Commands.Transacoes.Transferir
             _notificador = notificador;
         }
 
+        /// <summary>
+        /// Método handler para manipular o comando de transferência entre contas e suas regras de negócio
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<TransferenciaResponse?> Handle(TransferirCommand request, CancellationToken cancellationToken)
         {
             var docOrigem = request.DocumentoOrigem.Trim();

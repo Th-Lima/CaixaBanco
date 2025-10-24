@@ -1,5 +1,8 @@
 ﻿namespace CaixaBanco.Domain.Entities
 {
+    /// <summary>
+    /// Classe que representa uma transação como entidade do domínio
+    /// </summary>
     public class Transacao
     {
         public Guid Id { get; private set; }

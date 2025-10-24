@@ -2,6 +2,9 @@
 
 namespace CaixaBanco.Application.Responses.Contas
 {
+    /// <summary>
+    /// Classe response para dados da conta
+    /// </summary>
     public class ContaResponse
     {
         public string Nome { get; set; } = string.Empty;

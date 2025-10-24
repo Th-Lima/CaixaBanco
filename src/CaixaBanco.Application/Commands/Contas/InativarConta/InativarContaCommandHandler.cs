@@ -6,6 +6,9 @@ using MediatR;
 
 namespace CaixaBanco.Application.Commands.Contas.InativarConta
 {
+    /// <summary>
+    /// Classe handler para o comando de inativação de conta
+    /// </summary>
     public class InativarContaCommandHandler : IRequestHandler<InativarContaCommand, bool>
     {
         private readonly IContaRepository _contaRepository;
@@ -17,6 +20,12 @@ namespace CaixaBanco.Application.Commands.Contas.InativarConta
             _notificador = notificador;
         }
 
+        /// <summary>
+        /// Método handler para manipular o comando de inativação de conta e suas regras de negócio
+        /// </summary>
+        /// <param name="inativarContaCommand"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<bool> Handle(InativarContaCommand inativarContaCommand, CancellationToken cancellationToken)
         {
             var conta = await _contaRepository.ObterContaAsync(inativarContaCommand.Documento!.Trim(), cancellationToken);

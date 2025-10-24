@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CaixaBanco.Application.Commands.Contas.CriarConta
 {
+    /// <summary>
+    /// Comando para criação de conta
+    /// </summary>
     public class CriarContaCommand : IRequest<bool>
     {
 

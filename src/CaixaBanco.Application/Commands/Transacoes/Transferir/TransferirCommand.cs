@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CaixaBanco.Application.Commands.Transacoes.Transferir
 {
+    /// <summary>
+    /// Comando para transferir valor entre contas
+    /// </summary>
     public class TransferirCommand : IRequest<TransferenciaResponse?>
     {
         [Required]

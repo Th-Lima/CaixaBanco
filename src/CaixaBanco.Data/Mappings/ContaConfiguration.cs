@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CaixaBanco.Data.Mappings
 {
+    /// <summary>
+    /// Classe de configuração da entidade Conta para o Entity Framework Core
+    /// </summary>
     public class ContaConfiguration : IEntityTypeConfiguration<Conta>
     {
         public void Configure(EntityTypeBuilder<Conta> builder)

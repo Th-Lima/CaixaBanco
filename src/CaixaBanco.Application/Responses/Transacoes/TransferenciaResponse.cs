@@ -1,5 +1,8 @@
 ﻿namespace CaixaBanco.Application.Responses.Transacoes
 {
+    /// <summary>
+    /// Classe response para dados de transferência entre contas
+    /// </summary>
     public class TransferenciaResponse
     {
         public string? DocumentoOrigem { get; set; }

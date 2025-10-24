@@ -2,6 +2,9 @@
 
 namespace CaixaBanco.Domain.Entities
 {
+    /// <summary>
+    /// Classe que representa uma conta como entidade do domínio
+    /// </summary>
     public class Conta
     {
         public Guid Id { get; private set; }
