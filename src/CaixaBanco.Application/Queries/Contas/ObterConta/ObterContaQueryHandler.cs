@@ -20,7 +20,7 @@ namespace CaixaBanco.Application.Queries.Contas.ObterConta
         {
             var contas = await _contaRepository.ObterContasAsync(request.Nome, request.Documento);
 
-            if(contas !!= null && contas.Any())
+            if(contas != null && contas.Any())
             {
                 return contas.Select(c => new ContaResponse
                 {
